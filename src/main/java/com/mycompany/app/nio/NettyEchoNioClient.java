@@ -26,7 +26,7 @@ public class NettyEchoNioClient {
     static final Pattern pattern = Pattern.compile(".*\\W*counting sheep, (\\d+) little lambs.");
 
     public void connect(int port, String host) throws Exception {
-        final ByteBuf hiBuf = Unpooled.copiedBuffer("counting sheep? \n\r", Charset.forName("UTF-8"));
+        final ByteBuf hiBuf = Unpooled.copiedBuffer("counting sheep, 2 little lambs.\n\r", Charset.forName("UTF-8"));
         NioEventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();

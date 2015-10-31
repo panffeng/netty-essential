@@ -34,7 +34,7 @@ public class NettyEchoNioClient2 {
                         }
                     });
 
-            for(int i=0;i<300;i++) {
+            for(int i=0;i<3000;i++) {
                 Channel f = b.connect().channel();
 
                 f.closeFuture();
