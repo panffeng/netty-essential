@@ -12,6 +12,7 @@ import io.netty.handler.logging.LoggingHandler;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 
 public class NettyEchoNioClient2 {
@@ -92,6 +93,20 @@ public class NettyEchoNioClient2 {
 
 
     public static void main(String[] args) throws Exception {
+        final Thread mainThread = Thread.currentThread();
+        final Date starting = new Date();
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                try {
+                    mainThread.join();
+                    Date ending = new Date();
+                    long diff=ending.getTime()-starting.getTime();
+                    System.out.println("TIMING OF EXECUTION IN MILLIS:"+diff);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         new NettyEchoNioClient2().connect(6888, "127.0.0.1");
     }
 }

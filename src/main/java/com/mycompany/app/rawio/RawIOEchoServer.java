@@ -6,11 +6,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class EchoServer {
+public class RawIOEchoServer {
 
     public void serve(int port) throws Exception {
         ServerSocket ss = new ServerSocket(port);
         while (true) {
+            System.out.println(Thread.currentThread() + " is starting to serve.");
             final Socket socket = ss.accept();
             new Thread(new Runnable() {
                 public void run() {
@@ -29,16 +30,20 @@ public class EchoServer {
                                 out.write(message.getBytes()); // echo to client
                                 out.flush();
                                 System.out.println(socket+"\t"+message);
+                            }else {
+                                socket.close();
+                                System.out.println(Thread.currentThread() + " is dying.");
                             }
 
                         } catch (IOException e) {
-                           // e.printStackTrace();
+                            e.printStackTrace();
                             try {
                                 socket.close();
 
                             } catch (IOException e1) {
                                 e1.printStackTrace();
                             }
+                            System.out.println(Thread.currentThread() + " is dying after a possible exception");
                             break;
                         }
                     }
@@ -48,6 +53,6 @@ public class EchoServer {
         }
     }
     public static void main(String[] args) throws Exception {
-        new EchoServer().serve(6888);
+        new RawIOEchoServer().serve(6888);
     }
 }

@@ -15,13 +15,13 @@ import java.util.*;
 /**
  * adapted from http://www.xinotes.net/notes/note/694/
  */
-public class EchoServer {
+public class RawNIOEchoServer {
     private InetAddress addr;
     private int port;
     private Selector selector;
     private Map<SocketChannel,List<byte[]>> dataMap;
 
-    public EchoServer(InetAddress addr, int port) throws IOException {
+    public RawNIOEchoServer(InetAddress addr, int port) throws IOException {
         this.addr = addr;
         this.port = port;
         dataMap = new HashMap<SocketChannel,List<byte[]>>();
@@ -158,6 +158,6 @@ public class EchoServer {
     }
 
     public static void main(String[] args) throws Exception {
-        new EchoServer(null, 6888);
+        new RawNIOEchoServer(null, 6888);
     }
 }

@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,14 +67,15 @@ public class NettyEchoNioClient {
                                     if (matcher.find()) {
                                         String countVal = matcher.group(1);
                                         Integer count = Integer.valueOf(countVal) + 1;
-                                        if (1000 == count) {
+                                        if (10000 == count) {
                                             ctx.close();
                                         }
                                         message = "counting sheep, " + count + " little lambs.\n\r";
 
-                                    } else if (StringUtils.isNotBlank(msg) && !msg.contains("sheep")) {
-                                        message = "counting sheep, " + 222 + " little lambs.\n\r";
                                     }
+//                                    else if (StringUtils.isNotBlank(msg) && !msg.contains("sheep")) {
+//                                        message = "counting sheep, " + 2 + " little lambs.\n\r";
+//                                    }
                                     if (StringUtils.isNotBlank(message)) {
                                         ctx.writeAndFlush(message);
                                     }
@@ -100,6 +102,20 @@ public class NettyEchoNioClient {
     }
 
     public static void main(String[] args) throws Exception {
+        final Thread mainThread = Thread.currentThread();
+        final Date starting = new Date();
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                try {
+                    mainThread.join();
+                    Date ending = new Date();
+                    long diff=ending.getTime()-starting.getTime();
+                    System.out.println("TIMING OF EXECUTION IN MILLIS:"+diff);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         new NettyEchoNioClient().connect(6888, "127.0.0.1");
     }
 }
